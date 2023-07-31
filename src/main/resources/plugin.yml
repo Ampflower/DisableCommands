@@ -1,0 +1,47 @@
+name: DisableCommands
+version: '${project.version}'
+main: org.echo.disablecommands.DisableCommands
+api-version: '1.13'
+
+author: Azurix
+description: A plugin that allows you to disable commands
+
+commands:
+  disablecommands:
+    description: Allows you to manage disable commands
+    usage: /<command> [add|remove] "command"
+    permission: disablecommands.manage
+    aliases:
+      - disablecmd
+      - dc
+    subcommands:
+      list:
+        description: Print list of disabled commands
+        usage: /<command> list
+        permission: disablecommands.list
+      reload:
+        description: Reload DisableCommands plugin
+        usage: /<command> reload
+        permission: disablecommands.relaod
+
+  permissions:
+    disablecommands.manage:
+      description: Allows you to add and remove disable commands
+      default: op
+    disablecommands.list:
+      description: Allows you to print list of disabled commands
+      default: op
+    disablecommands.reload:
+      description: Allows you to reload DisableCommands plugin
+      default: op
+    disablecommands.bypass.*:
+      description: Allows you to bypass all of disabled commands
+      default: op
+    disablecommands.*:
+      description: Wildcard permission
+      default: op
+      children:
+        disablecommands.manage: true
+        disablecommands.list: true
+        disablecommands.reload: true
+        disablecommands.bypass.*: true

@@ -1,0 +1,4 @@
+org\echo\disablecommands\command\Commands.class
+org\echo\disablecommands\DisableCommands.class
+org\echo\disablecommands\listener\CommandsListener.class
+org\echo\disablecommands\config\Config.class
