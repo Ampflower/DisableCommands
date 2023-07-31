@@ -1,5 +1,7 @@
 # DisableCommands Minecraft Plugin
 
+**Plugin Page:** https://www.spigotmc.org/resources/disablecommands-1-13-x-1-20-x.110823/
+
 **Tested Minecraft Versions:** 1.13 - 1.20
 
 **Languages Supported:** Custom
