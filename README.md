@@ -6,15 +6,11 @@
 
 **Donation Link:** [Support us on PayPal](https://www.paypal.com/donate/?hosted_button_id=J4Y27JYWLYLBG)
 
-![Support Button](support-button.png)
-
 Join our Discord community for support and updates: [Discord Invite](https://discord.com/invite/Xf3PjwXzKg)
 
 ## Description
 
 DisableCommands is a simple yet powerful plugin for Minecraft that allows you to take full control of commands on your server. With this plugin, you can disable chat and list commands of your choice and set specific permissions for each command.
-
-![Gif](Gif.gif)
 
 **Hello English-speaking users!** Welcome to our French Minecraft plugin video. While the audio is in French, we've provided accurate English subtitles for your convenience. The visuals showcase the plugin's features, and we invite you to check it out. If you have any questions, feel free to reach out to us in English. Don't forget to like and subscribe if you enjoy the content. Thank you for your understanding, and happy watching!
 
