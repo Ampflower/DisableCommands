@@ -1,5 +1,7 @@
 package org.echo.disablecommands;
 
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.echo.disablecommands.command.Commands;
 import org.echo.disablecommands.config.Config;
