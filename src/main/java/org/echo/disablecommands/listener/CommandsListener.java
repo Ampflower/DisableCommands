@@ -1,6 +1,5 @@
 package org.echo.disablecommands.listener;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -45,16 +44,7 @@ public class CommandsListener implements Listener {
             return;
         }
 
-        String command = event.getMessage().split(" ")[0];
-
-        // Commande inexistante
-        if (Bukkit.getHelpMap().getHelpTopic(command) == null) {
-            event.setCancelled(true);
-            player.sendMessage(this.main.noExistMessage);
-            return;
-        }
-
-        command = command.substring(1);
+        String command = event.getMessage().split(" ")[0].substring(1);
 
         // If the command isn't disabled, don't go for the more expensive permission check.
         if (!this.main.isDisableAll && !this.main.disableCommands.contains(command)) {
