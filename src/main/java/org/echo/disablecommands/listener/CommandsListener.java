@@ -7,6 +7,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.echo.disablecommands.DisableCommands;
 
+import java.util.Collection;
+
 public class CommandsListener implements Listener {
     private final DisableCommands main;
     public CommandsListener(DisableCommands main) {
@@ -15,22 +17,24 @@ public class CommandsListener implements Listener {
 
     @EventHandler
     public void onList(PlayerCommandSendEvent event) {
+        final Player player = event.getPlayer();
+        final Collection<String> commands = event.getCommands();
 
         // Commande interdite
-        if (event.getPlayer().hasPermission("disablecommands.bypass.*")) {
+        if (player.hasPermission("disablecommands.bypass.*")) {
             return;
         }
 
-        event.getCommands().removeIf(str -> str.contains(":"));
+        commands.removeIf(str -> str.contains(":"));
 
         if (this.main.isDisableAll) {
-            event.getCommands().removeIf(str -> event.getPlayer().hasPermission("disablecommands.bypass." + str));
+            commands.removeIf(str -> !event.getPlayer().hasPermission("disablecommands.bypass." + str));
             return;
         }
 
         for (String command : this.main.disableCommands) {
-            if (!event.getPlayer().hasPermission("disablecommands.bypass." + command)) {
-                event.getCommands().remove(command);
+            if (!player.hasPermission("disablecommands.bypass." + command)) {
+                commands.remove(command);
             }
         }
     }
