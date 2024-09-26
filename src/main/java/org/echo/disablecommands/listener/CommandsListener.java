@@ -8,10 +8,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.echo.disablecommands.DisableCommands;
 
-import java.util.Iterator;
-
 public class CommandsListener implements Listener {
-    private DisableCommands main;
+    private final DisableCommands main;
     public CommandsListener(DisableCommands main) {
         this.main = main;
     }
@@ -20,26 +18,20 @@ public class CommandsListener implements Listener {
     public void onList(PlayerCommandSendEvent event) {
 
         // Commande interdite
-        if (!event.getPlayer().hasPermission("disablecommands.bypass.*")) {
+        if (event.getPlayer().hasPermission("disablecommands.bypass.*")) {
+            return;
+        }
 
-            if (this.main.isDisableAll) {
-                event.getCommands().clear();
-            }
-            else {
-                Iterator<String> it = event.getCommands().iterator();
-                String str;
+        event.getCommands().removeIf(str -> str.contains(":"));
 
-                while (it.hasNext()) {
-                    str = (String) it.next();
-                    if (str.contains(":")) {
-                        it.remove();
-                    }
-                }
+        if (this.main.isDisableAll) {
+            event.getCommands().removeIf(str -> event.getPlayer().hasPermission("disablecommands.bypass." + str));
+            return;
+        }
 
-                for (int i = 0; i < this.main.disableCommands.size(); i++) {
-                    if (!event.getPlayer().hasPermission("disablecommands.bypass." + this.main.disableCommands.get(i)))
-                        event.getCommands().remove(this.main.disableCommands.get(i));
-                }
+        for (String command : this.main.disableCommands) {
+            if (!event.getPlayer().hasPermission("disablecommands.bypass." + command)) {
+                event.getCommands().remove(command);
             }
         }
     }
@@ -49,34 +41,33 @@ public class CommandsListener implements Listener {
 
         Player player = event.getPlayer();
 
-        if (!player.hasPermission("disablecommands.bypass.*")) {
-
-            if (this.main.isDisableAll) {
-                event.setCancelled(true);
-                player.sendMessage(this.main.disableMessage);
-                return ;
-            }
-            else {
-                String[] args = event.getMessage().split(" ");
-
-                // Commande inexistante
-                if(Bukkit.getServer().getHelpMap().getHelpTopic(args[0]) == null) {
-                    event.setCancelled(true);
-                    player.sendMessage(this.main.noExistMessage);
-                    return ;
-                }
-
-                // Commande interdite
-                for (int i = 0; i < this.main.disableCommands.size(); i++) {
-                    if (!event.getPlayer().hasPermission("disablecommands.bypass." + this.main.disableCommands.get(i))) {
-                        if (args[0].equalsIgnoreCase("/" + this.main.disableCommands.get(i))) {
-                            event.setCancelled(true);
-                            player.sendMessage(this.main.disableMessage);
-                            return ;
-                        }
-                    }
-                }
-            }
+        if (player.hasPermission("disablecommands.bypass.*")) {
+            player.sendMessage("Permission granted.");
+            return;
         }
+
+        String command = event.getMessage().split(" ")[0];
+
+        // Commande inexistante
+        if (Bukkit.getHelpMap().getHelpTopic(command) == null) {
+            event.setCancelled(true);
+            player.sendMessage(this.main.noExistMessage);
+            return;
+        }
+
+        command = command.substring(1);
+
+        // If the command isn't disabled, don't go for the more expensive permission check.
+        if (!this.main.isDisableAll && !this.main.disableCommands.contains(command)) {
+            return;
+        }
+
+        // Command bypass
+        if (player.hasPermission("disablecommands.bypass." + command)) {
+            return;
+        }
+
+        event.setCancelled(true);
+        player.sendMessage(this.main.disableMessage);
     }
 }

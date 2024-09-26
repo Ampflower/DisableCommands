@@ -6,11 +6,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.echo.disablecommands.DisableCommands;
 
-import java.util.List;
-
 public class Commands implements CommandExecutor {
 
-    private DisableCommands main;
+    private final DisableCommands main;
 
     public Commands(DisableCommands main) {
         this.main = main;
@@ -46,13 +44,10 @@ public class Commands implements CommandExecutor {
     }
 
     private boolean handleDisableCommands(CommandSender sender) {
-
-        String permission = "disablecommands.manage";
-        if (!sender.hasPermission(permission)) {
-            if (!this.main.noPermMessage.isEmpty())
-                sender.sendMessage(this.main.noPermMessage.replace("{perm}", permission));
+        if (!permissionCheck(sender, "disablecommands.manage")) {
             return false;
         }
+
         // Explanation of the usage
         sender.sendMessage(ChatColor.GOLD + "[DisableCommands]");
         sender.sendMessage(ChatColor.WHITE + "Usage: " + ChatColor.YELLOW + "/dc [add|remove] <command>");
@@ -64,34 +59,17 @@ public class Commands implements CommandExecutor {
     }
 
     private boolean handleListDisabledCommands(CommandSender sender) {
-
-        String permission = "disablecommands.list";
-        if (!sender.hasPermission(permission)) {
-            if (!this.main.noPermMessage.isEmpty())
-                sender.sendMessage(this.main.noPermMessage.replace("{perm}", permission));
+        if (!permissionCheck(sender, "disablecommands.list")) {
             return false;
         }
 
-        List<String> disabledCommands = this.main.disableCommands;
         sender.sendMessage(ChatColor.YELLOW + "List of Disabled Commands:");
-        String commands = "";
-
-        for (int i = 0; i < disabledCommands.size(); i++) {
-            if (i != 0)
-                commands = commands + ", " + disabledCommands.get(i);
-            else
-                commands = disabledCommands.get(i);
-        }
-        sender.sendMessage(ChatColor.RED + commands);
+        sender.sendMessage(ChatColor.RED + String.join(", ", this.main.disableCommands));
         return true;
     }
 
     private boolean handleReloadPlugin(CommandSender sender) {
-
-        String permission = "disablecommands.reload";
-        if (!sender.hasPermission(permission)) {
-            if (!this.main.noPermMessage.isEmpty())
-                sender.sendMessage(this.main.noPermMessage.replace("{perm}", permission));
+        if (!permissionCheck(sender, "disablecommands.reload")) {
             return false;
         }
 
@@ -101,11 +79,7 @@ public class Commands implements CommandExecutor {
     }
 
     private boolean handleAddDisabledCommand(CommandSender sender, String targetCommand) {
-
-        String permission = "disablecommands.manage";
-        if (!sender.hasPermission(permission)) {
-            if (!this.main.noPermMessage.isEmpty())
-                sender.sendMessage(this.main.noPermMessage.replace("{perm}", permission));
+        if (!permissionCheck(sender, "disablecommands.manage")) {
             return false;
         }
 
@@ -115,16 +89,22 @@ public class Commands implements CommandExecutor {
     }
 
     private boolean handleRemoveDisabledCommand(CommandSender sender, String targetCommand) {
-
-        String permission = "disablecommands.manage";
-        if (!sender.hasPermission(permission)) {
-            if (!this.main.noPermMessage.isEmpty())
-                sender.sendMessage(this.main.noPermMessage.replace("{perm}", permission));
+        if (!permissionCheck(sender, "disablecommands.manage")) {
             return false;
         }
 
         this.main.getMyConfig().removeDisabledCommand(targetCommand);
         sender.sendMessage(ChatColor.YELLOW + "The command " + ChatColor.RED + targetCommand + ChatColor.YELLOW + " has been removed.");
         return true;
+    }
+
+    private boolean permissionCheck(CommandSender sender, String permission) {
+        if (sender.hasPermission(permission)) {
+            return true;
+        }
+        if (!this.main.noPermMessage.isEmpty()) {
+            sender.sendMessage(this.main.noPermMessage.replace("{perm}", permission));
+        }
+        return false;
     }
 }

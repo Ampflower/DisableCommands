@@ -5,13 +5,14 @@ import org.echo.disablecommands.DisableCommands;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public class Config {
 
-    private DisableCommands main;
+    private final DisableCommands main;
     private File file;
-    private YamlConfiguration yaml;
+    private final YamlConfiguration yaml;
 
     public Config(DisableCommands main, String file_name) {
         this.main = main;
@@ -38,25 +39,22 @@ public class Config {
         this.main.isDisableAll = this.yaml.getBoolean("disable_all");
         this.main.disableMessage = this.yaml.getString("disable_message").replace('&', '§');
         this.main.noPermMessage = this.yaml.getString("no_permission_message").replace('&', '§');
-        this.main.disableCommands = this.yaml.getStringList("disable_commands");
+        this.main.disableCommands = new LinkedHashSet<>(this.yaml.getStringList("disable_commands"));
         this.main.noExistMessage = this.yaml.getString("no_exist_message").replace('&', '§');
     }
 
     public void addDisabledCommand(String command) {
-
-        if (!main.disableCommands.contains(command)) {
-            this.main.disableCommands.add(command);
-            this.yaml.set("disable_commands", this.main.disableCommands);
+        if (!this.main.disableCommands.add(command)) {
+            this.yaml.set("disable_commands", new ArrayList<>(this.main.disableCommands));
             saveConfig();
         }
     }
 
     public void removeDisabledCommand(String command) {
-
-        this.main.disableCommands.remove(command);
-        this.yaml.set("disable_commands", this.main.disableCommands);
-
-        saveConfig();
+        if (this.main.disableCommands.remove(command)) {
+            this.yaml.set("disable_commands", new ArrayList<>(this.main.disableCommands));
+            saveConfig();
+        }
     }
 
     private void saveConfig() {

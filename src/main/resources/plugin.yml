@@ -3,7 +3,7 @@ version: '${project.version}'
 main: org.echo.disablecommands.DisableCommands
 api-version: '1.13'
 
-author: Azurix
+authors: [ Azurix, Ampflower ]
 description: A plugin that allows you to disable commands
 
 commands:

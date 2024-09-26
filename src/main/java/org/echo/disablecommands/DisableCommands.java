@@ -1,15 +1,13 @@
 package org.echo.disablecommands;
 
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.echo.disablecommands.command.Commands;
 import org.echo.disablecommands.config.Config;
 import org.echo.disablecommands.listener.CommandsListener;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public final class DisableCommands extends JavaPlugin {
 
@@ -19,7 +17,7 @@ public final class DisableCommands extends JavaPlugin {
     public String disableMessage;
     public String noPermMessage;
     public String noExistMessage;
-    public List<String> disableCommands = new ArrayList<String>();
+    public Set<String> disableCommands = new LinkedHashSet<>();
 
     @Override
     public void onEnable() {
