@@ -42,7 +42,6 @@ public class CommandsListener implements Listener {
         Player player = event.getPlayer();
 
         if (player.hasPermission("disablecommands.bypass.*")) {
-            player.sendMessage("Permission granted.");
             return;
         }
 
